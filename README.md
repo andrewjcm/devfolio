@@ -7,4 +7,4 @@ Made with Django REST and ReactJS.
 
 More to come...
 
-MIT 
+[MIT License](https://github.com/andrewjcm/devfolio/blob/master/LICENSE.md) 
