@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { PrivateRoute } from './Routes/PrivateRoute';
 import Home from './Pages/Home';
 import Dashboard from './Pages/Dashboard'
+import Login from './Pages/Login';
 
 class App extends React.Component {
   constructor(props) {
