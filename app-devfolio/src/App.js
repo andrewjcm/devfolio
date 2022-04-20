@@ -9,17 +9,23 @@ import Login from './Pages/Login';
 class App extends React.Component {
   constructor(props) {
     super(props)
-    this.state = {isAuthenticated: true};
+    this.state = {isAuthenticated: false};
+    this.onAuthenticationChange = this.onAuthenticationChange.bind(this);
+  }
+
+  onAuthenticationChange(authStatus) {
+    this.setState({isAuthenticated: authStatus});
+    console.log(`Is auth: ${this.state.isAuthenticated}`)
   }
 
   render() {
     return (
       <BrowserRouter>
         <Routes>
-          <Route path="/" exact element={<Home/>}/>
-          <Route path="/dashboard" exact element={<Dashboard/>}/>
-          <Route path="/login" exact element={<h1>Please login</h1>}/>
-          <Route element={ <PrivateRoute auth={this.state}/>}>
+          <Route path="/" element={<Home/>}/>
+          <Route path="/dashboard" element={<Dashboard/>}/>
+          <Route path="/login" element={<Login updateAuthentication={this.onAuthenticationChange}/>}/>
+          <Route element={ <PrivateRoute isAuthenticated={this.state.isAuthenticated}/>}>
             <Route path="/edit" element={<h1>Edit</h1>}/>
           </Route>
         </Routes>

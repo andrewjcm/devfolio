@@ -1,5 +1,12 @@
+import React from "react";
 import { Outlet, Navigate } from "react-router-dom";
 
-export const PrivateRoute = ({ auth: { isAuthenticated } }) => {
-    return isAuthenticated ? <Outlet /> : <Navigate to="/login" />;
-  };
+
+export class PrivateRoute extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+  render(){
+    return this.props.isAuthenticated ? <Outlet /> : <Navigate to="/login" />;
+  }
+}
