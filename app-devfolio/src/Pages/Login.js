@@ -1,42 +1,62 @@
-import React from 'react';
+import { useEffect, useState, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
+import AuthContext from '../Providers/AuthProvider';
 
-class Login extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            username: "",
-            password: ""
-        }
-        this.onLoginSubmit = this.onLoginSubmit.bind(this);
+const Login = () => {
+    const setAuth = useContext(AuthContext);
+    const [username, setUsername] = useState();
+    const [password, setPassword] = useState();
+    const [errorMessage, setErrorMessage] = useState();
+    const navigate = useNavigate();
+
+
+    useEffect(() => {
+        setErrorMessage('');
+    }, [username, password])
+
+    const onLoginSubmit = (e) => {
+        e.preventDefault();
+        setAuth = {username, password}
+        navigate('/edit');
+
     }
 
-    onLoginSubmit(event) {
-        console.log(`Username: ${this.state.username}, Password: ${this.state.password}`);
-        this.props.updateAuthentication(true);
-        
-        event.preventDefault();
-    }
-    
-    render() {
-        return (
+
+    return (
+        <div>
+            <p className={errorMessage ? "error-message" : "hidden"}>{errorMessage}</p>
+            <h1>Sign In</h1>
             <div className="login-form">
-                <form onSubmit={this.onLoginSubmit}>
+
+                <form onSubmit={onLoginSubmit}>
                     <div>
-                        <label> Username </label>
-                        <input type="text" name="username" onChange={e => this.setState({username: e.target.value })} required/>
+                        <label htmlFor='username'> Username </label>
+                        <input 
+                            type="text" 
+                            id="username" 
+                            onChange={(e) => setUsername(e.target.value)} 
+                            value={username}
+                            required
+                        />
                     </div>
                     <div>
-                        <label> Password </label>
-                        <input type="password" name="password" onChange={e => this.setState({password: e.target.value })} required/>
+                        <label htmlFor='password'> Password </label>
+                        <input 
+                            type="password" 
+                            id="password" 
+                            onChange={(e) => setPassword(e.target.value)}
+                            value={password}
+                            required
+                        />
                     </div>
                     <div>
-                        <input type="submit"/>
+                        <button>Sign In</button>
                     </div>
                 </form>
             </div>
+        </div>
 
-        );
-    }
+    );
 }
 
 export default Login;

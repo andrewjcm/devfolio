@@ -24,7 +24,7 @@ class App extends React.Component {
         <Routes>
           <Route path="/" element={<Home/>}/>
           <Route path="/dashboard" element={<Dashboard/>}/>
-          <Route path="/login" element={<Login updateAuthentication={this.onAuthenticationChange}/>}/>
+          <Route path="/login" element={<Login/>}/>
           <Route element={ <PrivateRoute isAuthenticated={this.state.isAuthenticated}/>}>
             <Route path="/edit" element={<h1>Edit</h1>}/>
           </Route>
