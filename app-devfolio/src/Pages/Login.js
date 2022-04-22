@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import useAuth from '../Hooks/useAuth';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import axios from 'axios';
+import axios from '../Services/Api';
 import 'bootstrap/dist/css/bootstrap.css';
 
 const Login = () => {
@@ -24,7 +24,7 @@ const Login = () => {
         try {
             console.log(`Username: ${username}, Password: ${password}`);
             const response = await axios.post(
-                'http://127.0.0.1:8000/api/token/', 
+                'token/', 
                 JSON.stringify({username, password}),
                 {
                     headers: {'Content-Type': 'application/json'}
@@ -46,7 +46,7 @@ const Login = () => {
             } else if (error.response?.status === 400) {
                 setErrorMessage('Missing username or password');
             } else if (error.response?.status === 401) {
-                setErrorMessage('Username and password combination incorrect');
+                setErrorMessage('Invalid username or password');
             } else {
                 setErrorMessage('Login failed');
             }
