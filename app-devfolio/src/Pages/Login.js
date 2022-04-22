@@ -1,15 +1,18 @@
-import { useEffect, useState, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
-import AuthContext from '../Providers/AuthProvider';
+import { useEffect, useState } from 'react';
+import useAuth from '../Hooks/useAuth';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.css';
 
 const Login = () => {
-    const { setAuth } = useContext(AuthContext);
+    const { setAuth } = useAuth();
+
+    const navigate = useNavigate();
+    const location = useLocation();
+    const from = location.state?.from?.pathname || "/";
     const [username, setUsername] = useState();
     const [password, setPassword] = useState();
     const [errorMessage, setErrorMessage] = useState();
-    const navigate = useNavigate();
 
 
     useEffect(() => {
@@ -24,8 +27,7 @@ const Login = () => {
                 'http://127.0.0.1:8000/api/token/', 
                 JSON.stringify({username, password}),
                 {
-                    headers: {'Content-Type': 'application/json'},
-                    'Access-Control-Allow-Credentials': true
+                    headers: {'Content-Type': 'application/json'}
                 }
             );
 
@@ -35,6 +37,8 @@ const Login = () => {
             setAuth({username, password, accessToken, refreshToken});
             setUsername('');
             setPassword('');
+
+            navigate(from, { replace: true });
         } catch (error) {
             if (!error?.response){
                 console.log(error);

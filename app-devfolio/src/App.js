@@ -1,10 +1,12 @@
 import React from 'react';
 import './App.css';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { PrivateRoute } from './Routes/PrivateRoute';
+import { Routes, Route } from 'react-router-dom';
 import Home from './Pages/Home';
 import Dashboard from './Pages/Dashboard'
 import Login from './Pages/Login';
+import Missing from './Pages/Missing';
+import Layout from './Components/Layout';
+import RequireAuth from './Components/RequireAuth';
 
 class App extends React.Component {
   constructor(props) {
@@ -20,16 +22,17 @@ class App extends React.Component {
 
   render() {
     return (
-      <BrowserRouter>
-        <Routes>
+      <Routes>
+        <Route path="/" element={<Layout/>}>
           <Route path="/" element={<Home/>}/>
-          <Route path="/dashboard" element={<Dashboard/>}/>
           <Route path="/login" element={<Login/>}/>
-          <Route element={ <PrivateRoute isAuthenticated={this.state.isAuthenticated}/>}>
+          <Route element={<RequireAuth/>}>
+          <Route path="/dashboard" element={<Dashboard/>}/>
             <Route path="/edit" element={<h1>Edit</h1>}/>
           </Route>
-        </Routes>
-      </BrowserRouter>
+          <Route path="*" element={<Missing/>}/>
+        </Route>
+      </Routes>
     );
   }
 }
