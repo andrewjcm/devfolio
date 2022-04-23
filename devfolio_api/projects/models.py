@@ -10,9 +10,9 @@ class Project(models.Model):
 
 class ProgrammingLanguage(models.Model):
     name = models.CharField(max_length=25)
-    project = models.ManyToManyField(Project)
+    project = models.ManyToManyField(Project, related_name='languages')
 
 class ProjectImage(models.Model):
-    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    project = models.ForeignKey(Project, related_name='images', on_delete=models.CASCADE)
     image_url = models.ImageField(upload_to='project_images', blank=True, null=True)
 
