@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
 import useAuth from '../Hooks/useAuth';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import axios from '../Services/Api';
 import 'bootstrap/dist/css/bootstrap.css';
+import jwt_decode from 'jwt-decode';
 
-const Login = () => {
+const Login = (props) => {
     const { setAuth } = useAuth();
 
     const navigate = useNavigate();
@@ -22,7 +23,6 @@ const Login = () => {
     const onLoginSubmit = async (e) => {
         e.preventDefault();
         try {
-            console.log(`Username: ${username}, Password: ${password}`);
             const response = await axios.post(
                 'token/', 
                 JSON.stringify({username, password}),
@@ -30,11 +30,12 @@ const Login = () => {
                     headers: {'Content-Type': 'application/json'}
                 }
             );
-
-            console.log(JSON.stringify(response?.data));
             const accessToken = response?.data?.access;
             const refreshToken = response?.data?.refresh;
-            setAuth({username, password, accessToken, refreshToken});
+            const userId = jwt_decode(accessToken).user_id;
+            const auth = {username, password, accessToken, refreshToken, userId};
+            props.authChange({username, password, accessToken, refreshToken, userId});
+            setAuth(auth);
             setUsername('');
             setPassword('');
 

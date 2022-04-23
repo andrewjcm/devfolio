@@ -16,25 +16,29 @@ Including another URLconf
 from django.contrib import admin
 from django.contrib.auth.models import User
 from django.urls import include, path
-from rest_framework import serializers, viewsets, routers
+from rest_framework import serializers, viewsets, routers, permissions
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
 )
 
+from projects.apis import ProjectViewSet
+
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('pk', 'username', 'email', 'is_staff', 'is_active')
+        fields = '__all__'
 
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
 
 router = routers.DefaultRouter()
-router.register('api/users', UserViewSet)
+router.register(r'api/users', UserViewSet)
+router.register(r'api/projects', ProjectViewSet)
 
 
 urlpatterns = [
