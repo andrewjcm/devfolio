@@ -7,12 +7,13 @@ import Login from './Pages/Login';
 import Missing from './Pages/Missing';
 import Layout from './Components/Layout';
 import RequireAuth from './Components/RequireAuth';
+import Profile from './Pages/Profile';
 
 class App extends React.Component {
   constructor(props) {
     super(props)
-    this.state = {isAuthenticated: false, menuToggled: false};
-    this.onAuthenticationChange = this.onAuthenticationChange.bind(this);
+    this.state = {isAuthenticated: false, auth: {}, menuToggled: false};
+    this.onAuthChange = this.onAuthChange.bind(this);
     this.toggleMenu = this.toggleMenu.bind(this);
   }
 
@@ -21,9 +22,8 @@ class App extends React.Component {
     this.setState({menuToggled: !this.state.menuToggled});
   }
 
-  onAuthenticationChange(authData) {
-    this.setState({isAuthenticated: authData});
-    console.log(`Is auth: ${this.state.isAuthenticated}`);
+  onAuthChange(authData) {
+    this.setState({auth: authData, isAuthenticated: true});
   }
 
   render() {
@@ -50,7 +50,7 @@ class App extends React.Component {
                   <NavLink className="nav-link" to="/dashboard">Dashboard</NavLink>
                 </li>
                 <li className="nav-item">
-                  <NavLink className="nav-link" to="/edit">Edit</NavLink>
+                  <NavLink className="nav-link" to="/profile">Profile</NavLink>
                 </li>
               </ul>
             </div>
@@ -59,9 +59,10 @@ class App extends React.Component {
         <Routes>
           <Route path="/" element={<Layout/>}>
             <Route path="/" element={<Home/>}/>
-            <Route path="/login" element={<Login/>}/>
+            <Route path="/login" element={<Login authChange={this.onAuthChange}/>}/>
             <Route element={<RequireAuth/>}>
-            <Route path="/dashboard" element={<Dashboard/>}/>
+              <Route path="/profile" element={<Profile auth={this.state.auth}/>}/>
+              <Route path="/dashboard" element={<Dashboard auth={this.state.auth}/>}/>
               <Route path="/edit" element={<h1>Edit</h1>}/>
             </Route>
             <Route path="*" element={<Missing/>}/>
