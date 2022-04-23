@@ -27,7 +27,7 @@ from projects.apis import ProjectViewSet
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('pk', 'username', 'email', 'is_staff', 'is_active')
+        fields = '__all__'
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -38,7 +38,7 @@ class UserViewSet(viewsets.ModelViewSet):
 
 router = routers.DefaultRouter()
 router.register(r'api/users', UserViewSet)
-router.register('api/projects', ProjectViewSet)
+router.register(r'api/projects', ProjectViewSet)
 
 
 urlpatterns = [

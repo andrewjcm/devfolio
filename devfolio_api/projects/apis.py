@@ -4,18 +4,6 @@ from projects.models import Project, ProgrammingLanguage, ProjectImage
 from django.contrib.auth.models import User
 
 class ProjectSerializer(serializers.ModelSerializer):
-    developer = serializers.SlugRelatedField(
-        many=True,
-        read_only=False,
-        slug_field='username',
-        queryset = User.objects.all()
-    )
-    languages = serializers.SlugRelatedField(
-        many=True,
-        read_only=False,
-        slug_field='name',
-        queryset = ProgrammingLanguage.objects.all()
-    )
 
     images = serializers.SlugRelatedField(
         many=True,
@@ -26,14 +14,17 @@ class ProjectSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Project
-        fields = [
-            'developer',
-            'name',
-            'description',
-            'link',
-            'images',
-            'languages'
-        ]
+        fields = '__all__'
+
+    def create(self, validated_data):
+        languages_data = validated_data.pop('languages')
+        images_data = validated_data.pop('images')
+        project = Project.objects.create(**validated_data)
+        for language_data in languages_data:
+            ProgrammingLanguage.objects.get_or_create(project=project, **language_data)
+        for image_data in images_data:
+            ProjectImage.objects.create(project=project, **image_data)
+        return project
 
 class ProjectViewSet(viewsets.ModelViewSet):
     queryset = Project.objects.all()
