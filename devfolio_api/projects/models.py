@@ -1,5 +1,6 @@
 from django.db import models
-from django.contrib.auth.models import User
+
+from developer.models import Developer
 
 
 class ProgrammingLanguage(models.Model):
@@ -10,7 +11,7 @@ class ProgrammingLanguage(models.Model):
 
 
 class Project(models.Model):
-    devloper = models.ForeignKey(User, on_delete=models.CASCADE)
+    devloper = models.ForeignKey(Developer, on_delete=models.CASCADE)
     name = models.CharField(max_length=250, blank=False, null=False)
     description = models.TextField(blank=True, null=True)
     link = models.CharField(max_length=250, blank=True, null=True)

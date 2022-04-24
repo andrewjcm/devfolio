@@ -1,7 +1,6 @@
 from rest_framework import viewsets, serializers, permissions
 
 from projects.models import Project, ProgrammingLanguage, ProjectImage
-from django.contrib.auth.models import User
 
 class ProjectSerializer(serializers.ModelSerializer):
 
