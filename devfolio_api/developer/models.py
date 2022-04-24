@@ -13,15 +13,15 @@ class Developer(models.Model):
 
 
 class Education(models.Model):
-    developer = models.ForeignKey(Developer, on_delete=models.CASCADE)
+    developer = models.ForeignKey(Developer, related_name='education', on_delete=models.CASCADE)
     school = models.CharField(max_length=50)
     degree = models.CharField(max_length=50)
     field = models.CharField(max_length=50)
     end_date = models.DateField()
 
 
-class Experince(models.Model):
-    developer = models.ForeignKey(Developer, on_delete=models.CASCADE)
+class Experience(models.Model):
+    developer = models.ForeignKey(Developer, related_name='experience', on_delete=models.CASCADE)
     title = models.CharField(max_length=50)
     company = models.CharField(max_length=50)
     location = models.CharField(max_length=50)
