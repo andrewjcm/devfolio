@@ -1,4 +1,6 @@
 from rest_framework import viewsets, serializers, permissions
+from rest_framework.decorators import action
+from rest_framework.response import Response
 
 from developer.models import Developer, Education, Experience
 
@@ -43,24 +45,32 @@ class DeveloperSerializer(serializers.ModelSerializer):
         instance.country = validated_data.get('country', instance.country)
         instance.save()
 
-        for education in education_data:
-            edu = education_data.pop(0)
-            edu.school = education.get('school', edu.school)
-            edu.degree = education.get('degree', edu.degree)
-            edu.field = education.get('field', edu.field)
-            edu.end_date = education.get('end_date', edu.end_date)
-            edu.save()
+        # for education in education_data:
+        #     try:
+        #         id = education['id']
+        #         edu = Education.objects.get(id=id)
+        #         edu.school = education.get('school', edu.school)
+        #         edu.degree = education.get('degree', edu.degree)
+        #         edu.field = education.get('field', edu.field)
+        #         edu.end_date = education.get('end_date', edu.end_date)
+        #         edu.save()
+        #     except (KeyError, Education.DoesNotExist):
+        #         edu, created = Education.objects.get_or_create(**education)
         
-        for experience in experience_data:
-            exp = experience_data.pop(0)
-            exp.title = experience.get('title', exp.title)
-            exp.company = experience.get('company', exp.company)
-            exp.location = experience.get('location', exp.location)
-            exp.start_date = experience.get('start_date', exp.start_date)
-            exp.end_date = experience.get('end_date', exp.end_date)
-            exp.current = experience.get('current', exp.current)
-            exp.description = experience.get('description', exp.description)
-            exp.save()
+        # for experience in experience_data:
+        #     try:
+        #         id = experience['id']
+        #         exp = Experience.objects.get(id=id)
+        #         exp.title = experience.get('title', exp.title)
+        #         exp.company = experience.get('company', exp.company)
+        #         exp.location = experience.get('location', exp.location)
+        #         exp.start_date = experience.get('start_date', exp.start_date)
+        #         exp.end_date = experience.get('end_date', exp.end_date)
+        #         exp.current = experience.get('current', exp.current)
+        #         exp.description = experience.get('description', exp.description)
+        #         exp.save()
+        #     except (KeyError, Experience.DoesNotExist):
+        #         exp, created = Experience.objects.create_or_get(**experience)
 
         
         return instance
@@ -68,3 +78,13 @@ class DeveloperSerializer(serializers.ModelSerializer):
 class DeveloperViewSet(viewsets.ModelViewSet):
     queryset = Developer.objects.all()
     serializer_class = DeveloperSerializer
+
+
+class EducationViewSet(viewsets.ModelViewSet):
+    queryset = Education.objects.all()
+    serializer_class = EducationSerializer
+
+
+class ExperienceViewSet(viewsets.ModelViewSet):
+    queryset = Experience.objects.all()
+    serializer_class = ExperienceSerializer
