@@ -21,8 +21,9 @@ from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
 )
-
+from developer.apis import DeveloperViewSet, EducationViewSet, ExperienceViewSet
 from projects.apis import ProjectViewSet
+
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -39,6 +40,9 @@ class UserViewSet(viewsets.ModelViewSet):
 router = routers.DefaultRouter()
 router.register(r'api/users', UserViewSet)
 router.register(r'api/projects', ProjectViewSet)
+router.register(r'api/developers', DeveloperViewSet)
+router.register(r'api/education', EducationViewSet)
+router.register(r'api/experience', ExperienceViewSet)
 
 
 urlpatterns = [
