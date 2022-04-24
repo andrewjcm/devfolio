@@ -16,6 +16,7 @@ const Dashboard = () => {
         const getUsers = async () => {
             try {
                 const response = await axiosPrivate.get('users/');
+                console.log(response.data)
                 isMounted && setData(response.data);
             } catch (err) {
                 console.error(err);
@@ -37,7 +38,12 @@ const Dashboard = () => {
             {data?.length
                 ? (
                     <ul>
-                        {Object.keys(data[0]).map(key => <li key={key}>{`${key}: ${data[0][key]}`}</li>)}
+                        {Object.keys(data[0]).map(key => 
+                            <li key={key}>
+                                
+                                {`${key}: ${JSON.stringify(data[0][key])}`}
+
+                            </li>)}
                     </ul>
                 ) : <p>No users to display</p>
             }
