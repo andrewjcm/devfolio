@@ -1,20 +1,14 @@
 import React from 'react';
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPenToSquare } from '@fortawesome/free-solid-svg-icons';
+import { faPenToSquare, faLocationDot } from '@fortawesome/free-solid-svg-icons';
 
-library.add(faPenToSquare);
+library.add(faPenToSquare, faLocationDot);
 
 
 class ViewProfile extends React.Component {
     constructor(props){
         super(props);
-
-        this.activateEdit = this.activateEdit.bind(this);
-    }
-
-    activateEdit() {
-        this.props.editProfile();
     }
 
     render(){
@@ -31,58 +25,64 @@ class ViewProfile extends React.Component {
                 <div className="col-md-5 border-right">
                     <div className="p-3 py-5">
                         <div className="d-flex justify-content-between align-items-center mb-3">
-                            <h4 className="text-right">Profile</h4>
-                            <button className="btn" onClick={this.activateEdit}> <FontAwesomeIcon icon="fa-pen-to-square" /> </button> 
+                            <h4 className="text-start">Profile</h4>
+                            <button className="btn" onClick={this.props.activateEdit}> <FontAwesomeIcon icon="fa-pen-to-square" /> </button> 
                         </div>
                         <div className="row mt-3">
                             <div className="col-md-12">
                                 
-                                <h2 className="font-weight-bold">{this.props.user.name ? this.props.user.name : "Andrew I/O"}</h2>
+                                <h2 className="fw-bold">{this.props.user.first_name ? `${this.props.user.first_name} ${this.props.user.last_name}` : "Andrew I/O"}</h2>
                             
                             </div>
                             <div className="col-md-12">
+                                <FontAwesomeIcon className='pe-2' icon="fa-location-dot"/>
                                 <span className="font-weight-bold">
                                     {this.props.user.city ? `${this.props.user.city}, ` : "San Diego, "}
                                     {this.props.user.state ? `${this.props.user.state}, ` : "California, "}
                                     {this.props.user.country ? `${this.props.user.country}` : "USA"}
-                                
                                 </span>
                                
                             </div>
                             
                             <div className="d-flex justify-content-between align-items-center experience mt-5">
-                                <h4 className="text-right">Education</h4>
+                                <h4>Education</h4>
                             </div>
                             <br/>
                             {
-                                <div>
+                                <div className='text-start ms-3'>
                                     <div className="col-md-12">
                                         <span className="fw-bold">Western Governors University</span>
                                     </div> 
                                     <div className="col-md-12">
-                                        <span className='font-weight-bold'> Bachelors of Science, Computer Science </span>
+                                        <span> Bachelors of Science, Computer Science </span>
                                     </div>
                                     <div className="col-md-12">
-                                        <span className='fst-italic'> Graduated: December 2021 </span>
+                                        <span className='text-muted'>December 2021 </span>
                                     </div>
                                 </div>
                             }
 
                             <div className="d-flex justify-content-between align-items-center experience mt-5">
-                                <h4 className="text-right">Experience</h4>
+                                <h4 className="text-start">Experience</h4>
                             </div>
                             <br/>
 
                             {
-                                <div>
+                                <div className='text-start ms-3'>
                                     <div className="col-md-12">
-                                        <label className="labels">Experience in Designing</label>
-                                        <input type="text" className="form-control" placeholder="experience" value=""/>
+                                        <span>T-Mobile</span>
                                     </div> 
-                                    <br/>
                                     <div className="col-md-12">
-                                        <label className="labels">Additional Details</label>
-                                        <input type="text" className="form-control" placeholder="additional details" value=""/>
+                                        <span className='fw-bold'>Software Engineer</span>
+                                    </div>
+                                    <div className="col-md-12">
+                                        <span className='text-muted'>May 2021 - Present</span>
+                                    </div>
+                                    <div className="col-md-12">
+                                        <span className='text-muted'>Remote</span>
+                                    </div>
+                                    <div className="col-md-12">
+                                        <span>This is the description.</span>
                                     </div>
                                 </div>
                             }   

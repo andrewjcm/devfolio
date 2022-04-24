@@ -11,7 +11,13 @@ class Profile extends React.Component {
         this.state = {
             loading: true, 
             editing: false, 
-            user: { updateUser: false, updateDev: false, updateEdu: false, updateExp: false }
+            profile: { 
+                updateUser: false, 
+                updateDev: false, 
+                updateEdu: false, 
+                updateExp: false 
+            },
+            user: {}
         }
         this.userId = props.auth.userId
         this.submitUpdateProfile = this.submitUpdateProfile.bind(this);
@@ -35,8 +41,8 @@ class Profile extends React.Component {
     }
 
     submitUpdateProfile(edits) {
-        this.setState({user: edits});
-        console.log(`New username: ${this.state.user.username}`);
+        // this.setState({user: edits});
+        console.log(`New username: ${edits}`);
         this.editProfile();
     }
 
