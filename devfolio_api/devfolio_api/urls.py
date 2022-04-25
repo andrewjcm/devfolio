@@ -21,20 +21,8 @@ from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
 )
-from developer.apis import DeveloperViewSet, EducationViewSet, ExperienceViewSet
+from developer.apis import DeveloperViewSet, EducationViewSet, ExperienceViewSet, UserViewSet
 from projects.apis import ProjectViewSet
-
-
-class UserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = '__all__'
-
-
-class UserViewSet(viewsets.ModelViewSet):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
 
 router = routers.DefaultRouter()

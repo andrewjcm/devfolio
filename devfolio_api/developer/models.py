@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 
 
 class Developer(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, related_name='developer', on_delete=models.CASCADE)
     city = models.CharField(max_length=50)
     state = models.CharField(max_length=50)
     country = models.CharField(max_length=50)
