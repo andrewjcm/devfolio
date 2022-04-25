@@ -9,6 +9,14 @@ library.add(faPenToSquare, faLocationDot);
 class ViewProfile extends React.Component {
     constructor(props){
         super(props);
+        this.formatDate = this.formatDate.bind(this);
+    }
+
+    formatDate(inputDate) {
+        const months = ["Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sept", "Oct", "Nov", "Dec"];
+        const date = new Date(inputDate);
+        const formattedDate = `${months[date.getMonth() + 1]}, ${date.getFullYear()}`
+        return formattedDate;
     }
 
     render(){
@@ -37,54 +45,63 @@ class ViewProfile extends React.Component {
                             <div className="col-md-12">
                                 <FontAwesomeIcon className='pe-2' icon="fa-location-dot"/>
                                 <span className="font-weight-bold">
-                                    {this.props.user.city ? `${this.props.user.city}, ` : "San Diego, "}
-                                    {this.props.user.state ? `${this.props.user.state}, ` : "California, "}
-                                    {this.props.user.country ? `${this.props.user.country}` : "USA"}
+                                    {`${this.props.user?.developer?.city}, `}
+                                    {`${this.props.user?.developer?.state}, `}
+                                    {`${this.props.user?.developer?.country}`}
                                 </span>
                                
                             </div>
-                            
-                            <div className="d-flex justify-content-between align-items-center experience mt-5">
-                                <h4>Education</h4>
-                            </div>
-                            <br/>
-                            {
-                                <div className='text-start ms-3'>
-                                    <div className="col-md-12">
-                                        <span className="fw-bold">Western Governors University</span>
-                                    </div> 
-                                    <div className="col-md-12">
-                                        <span> Bachelors of Science, Computer Science </span>
+                            { this.props.user?.developer?.education.length
+                                ?   <div>
+                                        <div className="d-flex justify-content-between align-items-center experience mt-5">
+                                            <h4>Education</h4>
+                                        </div>
+                                        <br/>
+                                        { this.props.user.developer.education.map(edu =>
+                                            <div className='text-start ms-3'>
+                                                <div className="col-md-12">
+                                                    <span className="fw-bold">{edu.school}</span>
+                                                </div> 
+                                                <div className="col-md-12">
+                                                    <span> {edu.degree}, {edu.field} </span>
+                                                </div>
+                                                <div className="col-md-12">
+                                                    <span className='text-muted'>{this.formatDate(edu.end_date)} </span>
+                                                </div>
+                                            </div>
+                                        )}
                                     </div>
-                                    <div className="col-md-12">
-                                        <span className='text-muted'>December 2021 </span>
-                                    </div>
-                                </div>
+                                : <div></div>
                             }
-
-                            <div className="d-flex justify-content-between align-items-center experience mt-5">
-                                <h4 className="text-start">Experience</h4>
-                            </div>
-                            <br/>
-
-                            {
-                                <div className='text-start ms-3'>
-                                    <div className="col-md-12">
-                                        <span>T-Mobile</span>
-                                    </div> 
-                                    <div className="col-md-12">
-                                        <span className='fw-bold'>Software Engineer</span>
+                            { this.props.user?.developer?.experience.length
+                                ?   <div>
+                                        <div className="d-flex justify-content-between align-items-center experience mt-5">
+                                            <h4 className="text-start">Experience</h4>
+                                        </div>
+                                        <br/>
+                                        { this.props.user.developer.experience.map(exp =>
+                                            <div className='text-start ms-3'>
+                                                <div className="col-md-12">
+                                                    <span>{exp.company}</span>
+                                                </div> 
+                                                <div className="col-md-12">
+                                                    <span className='fw-bold'>{exp.title}</span>
+                                                </div>
+                                                <div className="col-md-12">
+                                                    <span className='text-muted'>
+                                                        {this.formatDate(exp.start_date)} - {exp.current ? 'Present' : this.formatDate(exp.end_date)}
+                                                    </span>
+                                                </div>
+                                                <div className="col-md-12">
+                                                    <span className='text-muted'>{exp.location}</span>
+                                                </div>
+                                                <div className="col-md-12 mb-3">
+                                                    <span>{exp.description}</span>
+                                                </div>
+                                            </div>
+                                        )}
                                     </div>
-                                    <div className="col-md-12">
-                                        <span className='text-muted'>May 2021 - Present</span>
-                                    </div>
-                                    <div className="col-md-12">
-                                        <span className='text-muted'>Remote</span>
-                                    </div>
-                                    <div className="col-md-12">
-                                        <span>This is the description.</span>
-                                    </div>
-                                </div>
+                                : <div></div>
                             }   
 
                         </div>
