@@ -10,13 +10,7 @@ class Profile extends React.Component {
         super(props);
         this.state = {
             loading: true, 
-            editing: false, 
-            profile: { 
-                updateUser: false, 
-                updateDev: false, 
-                updateEdu: false, 
-                updateExp: false 
-            },
+            editing: false,
             user: {}
         }
         this.userId = props.auth.userId
@@ -40,14 +34,133 @@ class Profile extends React.Component {
         }
     }
 
-    submitUpdateProfile(edits) {
-        // this.setState({user: edits});
-        console.log(`New username: ${edits}`);
+    submitUpdateProfile(edits, changes) {
+        this.setState({user: edits});
         this.editProfile();
+
+        if (changes.user.updated){
+            this.updateUser(changes.user.data);
+        }
+
+        if (changes.developer.updated) {
+            this.updateDeveloper(changes.developer.updatedData);
+        }
+        
+        if (changes.developer.added) {
+            this.addDeveloper(changes.user.developer.addedData);
+        }
+
+        if (changes.education.updated) {
+            for (let edu of changes.education.updatedData) {
+                this.updateEducation(edu);
+            }
+        }
+        
+        if (changes.education.added) {
+            for (let edu of changes.education.addedData) {
+                this.updateEducation(edu);
+            }
+        }
+
+        if (changes.education.deleted) {
+            for (let edu of changes.education.deletedId) {
+                this.updateEducation(edu);
+            }
+        }
+
+        if (changes.experience.updated) {
+            for (let exp of changes.experience.updatedData) {
+                this.updateExperince(exp);
+            }
+        }
+        
+        if (changes.experience.added) {
+            for (let exp of changes.experience.addedData) {
+                this.updateExperince(exp);
+            }
+        }
+
+        if (changes.experience.deleted) {
+            for (let exp of changes.experience.deletedId) {
+                this.updateExperince(exp);
+            }
+        }
     }
 
     editProfile(){
         this.setState({ editing: !this.state.editing });
+    }
+
+    async updateUser(user) {
+        try {
+            const response = await axiosPrivate.put(`users/${this.userId}/`, user);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    async addDeveloper(developer) {
+        try {
+            const response = await axiosPrivate.post(`developers/`, developer);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    async updateDeveloper(developer) {
+        try {
+            const response = await axiosPrivate.put(`developers/${developer.id}/`, developer);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    async updateEducation(education) {
+        try {
+            const response = await axiosPrivate.put(`education/${education.id}/`, education);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    async addEducation(education) {
+        try {
+            const response = await axiosPrivate.post(`education/`, education);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    async deleteEducation(id) {
+        try {
+            const response = await axiosPrivate.delete(`education/${id}/`);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    async updateExperince(experience) {
+        try {
+            const response = await axiosPrivate.put(`experience/${experience.id}/`, experience);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    async addExperince(experience) {
+        try {
+            const response = await axiosPrivate.post(`experience/`, experience);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    async deleteExperince(id) {
+        try {
+            const response = await axiosPrivate.delete(`experience/${id}/`);
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     render() {
