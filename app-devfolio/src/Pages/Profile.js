@@ -58,13 +58,13 @@ class Profile extends React.Component {
         
         if (changes.education.added) {
             for (let edu of changes.education.addedData) {
-                this.updateEducation(edu);
+                this.addEducation(edu);
             }
         }
 
         if (changes.education.deleted) {
             for (let edu of changes.education.deletedId) {
-                this.updateEducation(edu);
+                this.deleteEducation(edu);
             }
         }
 
@@ -76,13 +76,13 @@ class Profile extends React.Component {
         
         if (changes.experience.added) {
             for (let exp of changes.experience.addedData) {
-                this.updateExperince(exp);
+                this.addExperince(exp);
             }
         }
 
         if (changes.experience.deleted) {
             for (let exp of changes.experience.deletedId) {
-                this.updateExperince(exp);
+                this.deleteExperince(exp);
             }
         }
     }

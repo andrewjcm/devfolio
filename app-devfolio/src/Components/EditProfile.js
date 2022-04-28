@@ -130,10 +130,15 @@ class EditProfile extends React.Component {
         if (index > -1){
             eduArray.splice(index, 1);
         }
-        this.setState({profile: {...this.state.profile, updateEdu: true},
+        this.setState({profile: {
+            ...this.state.profile, 
+            education: {
+                ...this.state.profile.education,
+                deleted: true
+            },
             user: {...this.state.user, developer: 
                 {...this.state.user.developer, education: eduArray}
-        }});
+        }}});
     }
 
     updateExperience(e, index, key) {
