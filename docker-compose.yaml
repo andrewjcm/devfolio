@@ -10,9 +10,10 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8000:8000"
+    volumes:
+      - ./devfolio_api:/api
 
   app-devfolio:
-    restart: always
     command : npm start
     container_name: app-devfolio
     build:
@@ -23,3 +24,5 @@ services:
     stdin_open: true
     depends_on:
       - project
+    volumes:
+      - ./app-devfolio:/frontend

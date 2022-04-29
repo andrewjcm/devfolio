@@ -5,7 +5,5 @@ FROM node:latest
 WORKDIR /frontend
 
 COPY package.json ./
-RUN npm install 
-RUN npm install react-scripts@3.4.1 -g 
-COPY . ./
+RUN npm install
 EXPOSE 3000
