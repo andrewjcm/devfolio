@@ -34,37 +34,37 @@ class Profile extends React.Component {
         }
     }
 
-    submitUpdateProfile(edits, changes) {
-        this.setState({user: edits});
+    submitUpdateProfile(data, changes) {
         this.editProfile();
 
-        if (changes.user.updated){
-            this.updateUser(changes.user.data);
+        if (changes.user){
+            this.updateUser(data);
         }
 
-        if (changes.developer.updated) {
-            this.updateDeveloper(changes.developer.updatedData);
+        if (changes.developer) {
+            if (this.state.user?.developer) {
+                this.updateDeveloper(data.developer);
+            }
+            else {
+                this.addDeveloper(data.developer);
+            }
         }
         
         if (changes.developer.added) {
             this.addDeveloper(changes.user.developer.addedData);
         }
 
-        if (changes.education.updated) {
-            for (let edu of changes.education.updatedData) {
-                this.updateEducation(edu);
-            }
-        }
-        
-        if (changes.education.added) {
-            for (let edu of changes.education.addedData) {
-                this.updateEducation(edu);
-            }
-        }
-
-        if (changes.education.deleted) {
-            for (let edu of changes.education.deletedId) {
-                this.updateEducation(edu);
+        if (changes.education) {
+            for (let edu of data.user.developer.education) {
+                if (edu?.added){
+                    delete edu.added;
+                    delete edu.updated;
+                    this.addEducation(edu);
+                }
+                else if (edu?.updated){
+                    delete edu.updated;
+                    this.updateEducation(edu);
+                }
             }
         }
 
@@ -85,6 +85,9 @@ class Profile extends React.Component {
                 this.updateExperince(exp);
             }
         }
+
+        
+        this.setState({user: data});
     }
 
     editProfile(){

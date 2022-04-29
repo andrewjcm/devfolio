@@ -1,4 +1,5 @@
 import React from 'react';
+import { axiosPrivate } from '../Services/Api';
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFloppyDisk, faPlus, faTrashArrowUp } from '@fortawesome/free-solid-svg-icons';
@@ -11,33 +12,11 @@ class EditProfile extends React.Component {
     constructor(props){
         super(props);
         this.state = {
-            profile: { 
-                user: { 
-                    updated: false, 
-                    data: {},
-                },
-                developer: {
-                    updated: false, 
-                    updatedData: {}, 
-                    added: false, 
-                    addedData: {}
-                },
-                education: {
-                    updated: false, 
-                    updatedData: [{}], 
-                    added: false, 
-                    addedData: [{}], 
-                    deleted: false, 
-                    deletedId: []
-                },
-                experience: {
-                    updated: false, 
-                    updatedData: [{}], 
-                    added: false, 
-                    addedData: [{}], 
-                    deleted: false, 
-                    deletedId: []
-                }
+            edits : {
+                user: false,
+                developer: false,
+                education: false,
+                experience: false
             },
             user: this.props.user
         };
@@ -48,18 +27,8 @@ class EditProfile extends React.Component {
         this.deleteEducation = this.deleteEducation.bind(this);
     }
 
-    componentDidMount(){
-        // if (!this.state.user?.developer?.education.length){
-        //     this.addEducation()
-        // }
-
-        // if (!this.state.user?.developer?.experience.length){
-        //     this.addExperience()
-        // }
-    }
-
     onSubmitUpdateProfile() {
-        this.props.profileEdits(this.state.user, this.state.profile);
+        this.props.profileEdits(this.state.user, this.state.edits);
     }
 
     updateUser(e, key){
@@ -68,12 +37,9 @@ class EditProfile extends React.Component {
 
         this.setState({
             user: newData,
-            profile: {
-                ...this.state.profile, 
-                user: {
-                    updated: true,
-                    data: newData
-                }
+            edits: {
+                ...this.state.edits,
+                user: true
             }
         });
     }
@@ -84,12 +50,9 @@ class EditProfile extends React.Component {
 
         this.setState({
             user: newData,
-            profile: {
-                ...this.state.profile, 
-                developer: {
-                    updated: true,
-                    updatedData: newData.developer
-                }
+            edits: {
+                ...this.state.edits,
+                developer: true
             }
         });
     }
@@ -98,11 +61,12 @@ class EditProfile extends React.Component {
         e.preventDefault();
         let eduArray = this.state.user.developer.education;
         eduArray[index][key] = e.target.value;
+        eduArray[index]['updated'] = true;
 
         this.setState({
-            profile: {
-                ...this.state.profile,
-                updateEdu: true
+            edits: {
+                ...this.state.edits,
+                education: true
             },
             user: {
                 ...this.state.user, 
@@ -117,23 +81,38 @@ class EditProfile extends React.Component {
 
     addEducation(){
         let eduArray = this.state.user.developer.education;
-        eduArray.push({school: '', field: ''});
+        eduArray.push({
+            school: '', 
+            degree: '', 
+            field: '', 
+            end_date: '',
+            added: true
+        });
 
-        this.setState(
-            {...this.state.user, developer: 
-                {...this.state.user.developer, education: eduArray}
+        this.setState({
+            edits: {
+                ...this.state.edits,
+                education: true
+            },
+            user: {
+                ...this.state.user, 
+                developer: {
+                    ...this.state.user.developer, 
+                    education: eduArray
+                }
+            }
         });
     }
 
-    deleteEducation(index) {
+    async deleteEducation(index) {
         let eduArray = this.state.user.developer.education;
-        if (index > -1){
+        let eduId = eduArray[index].id;
+        try {
+            const response = await axiosPrivate.delete(`education/${eduId}/`);
             eduArray.splice(index, 1);
+        } catch (error) {
+            console.log(error);
         }
-        this.setState({profile: {...this.state.profile, updateEdu: true},
-            user: {...this.state.user, developer: 
-                {...this.state.user.developer, education: eduArray}
-        }});
     }
 
     updateExperience(e, index, key) {
