@@ -36,6 +36,7 @@ class Profile extends React.Component {
 
     submitUpdateProfile(data, changes) {
         this.editProfile();
+        this.setState({user: {}});
 
         if (changes.user){
             this.updateUser(data);
@@ -65,26 +66,21 @@ class Profile extends React.Component {
             }
         }
 
-        if (changes.experience.updated) {
-            for (let exp of changes.experience.updatedData) {
-                this.updateExperince(exp);
-            }
-        }
-        
-        if (changes.experience.added) {
-            for (let exp of changes.experience.addedData) {
-                this.addExperince(exp);
-            }
-        }
-
-        if (changes.experience.deleted) {
-            for (let exp of changes.experience.deletedId) {
-                this.deleteExperince(exp);
+        if (changes.experience) {
+            for (let exp of data.developer.experience) {
+                if (exp?.added){
+                    delete exp.added;
+                    delete exp.updated;
+                    this.addExperince(exp);
+                }
+                else if (exp?.updated){
+                    delete exp.updated;
+                    this.updateExperince(exp);
+                }
             }
         }
 
-        
-        this.setState({user: data});
+        this.getUserDetail();
     }
 
     editProfile(){
@@ -93,7 +89,7 @@ class Profile extends React.Component {
 
     async updateUser(user) {
         try {
-            const response = await axiosPrivate.put(`users/${this.userId}/`, user);
+            await axiosPrivate.put(`users/${this.userId}/`, user);
         } catch (error) {
             console.log(error);
         }
@@ -101,7 +97,7 @@ class Profile extends React.Component {
 
     async addDeveloper(developer) {
         try {
-            const response = await axiosPrivate.post(`developers/`, developer);
+            await axiosPrivate.post(`developers/`, developer);
         } catch (error) {
             console.log(error);
         }
@@ -109,7 +105,7 @@ class Profile extends React.Component {
 
     async updateDeveloper(developer) {
         try {
-            const response = await axiosPrivate.put(`developers/${developer.id}/`, developer);
+            await axiosPrivate.put(`developers/${developer.id}/`, developer);
         } catch (error) {
             console.log(error);
         }
@@ -117,7 +113,7 @@ class Profile extends React.Component {
 
     async updateEducation(education) {
         try {
-            const response = await axiosPrivate.put(`education/${education.id}/`, education);
+            await axiosPrivate.put(`education/${education.id}/`, education);
         } catch (error) {
             console.log(error);
         }
@@ -125,7 +121,7 @@ class Profile extends React.Component {
 
     async addEducation(education) {
         try {
-            const response = await axiosPrivate.post(`education/`, education);
+            await axiosPrivate.post(`education/`, education);
         } catch (error) {
             console.log(error);
         }
@@ -133,7 +129,7 @@ class Profile extends React.Component {
 
     async deleteEducation(id) {
         try {
-            const response = await axiosPrivate.delete(`education/${id}/`);
+            await axiosPrivate.delete(`education/${id}/`);
         } catch (error) {
             console.log(error);
         }
@@ -141,7 +137,7 @@ class Profile extends React.Component {
 
     async updateExperince(experience) {
         try {
-            const response = await axiosPrivate.put(`experience/${experience.id}/`, experience);
+            await axiosPrivate.put(`experience/${experience.id}/`, experience);
         } catch (error) {
             console.log(error);
         }
@@ -149,7 +145,7 @@ class Profile extends React.Component {
 
     async addExperince(experience) {
         try {
-            const response = await axiosPrivate.post(`experience/`, experience);
+            await axiosPrivate.post(`experience/`, experience);
         } catch (error) {
             console.log(error);
         }
@@ -157,7 +153,7 @@ class Profile extends React.Component {
 
     async deleteExperince(id) {
         try {
-            const response = await axiosPrivate.delete(`experience/${id}/`);
+            await axiosPrivate.delete(`experience/${id}/`);
         } catch (error) {
             console.log(error);
         }

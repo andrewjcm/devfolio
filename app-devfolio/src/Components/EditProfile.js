@@ -1,8 +1,9 @@
 import React from 'react';
-import { axiosPrivate } from '../Services/Api';
+import EditEducation from './EditEducation';
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFloppyDisk, faPlus, faTrashArrowUp } from '@fortawesome/free-solid-svg-icons';
+import EditExperience from './EditExperience';
 
 
 library.add(faFloppyDisk, faPlus, faTrashArrowUp);
@@ -25,6 +26,10 @@ class EditProfile extends React.Component {
         this.updateEducation = this.updateEducation.bind(this);
         this.addEducation = this.addEducation.bind(this);
         this.deleteEducation = this.deleteEducation.bind(this);
+        
+        this.updateExperience = this.updateExperience.bind(this);
+        this.addExperience = this.addExperience.bind(this);
+        this.deleteExperience = this.deleteExperience.bind(this);
     }
 
     onSubmitUpdateProfile() {
@@ -57,11 +62,9 @@ class EditProfile extends React.Component {
         });
     }
 
-    updateEducation(e, index, key) {
-        e.preventDefault();
+    updateEducation(education, index) {
         let eduArray = this.state.user.developer.education;
-        eduArray[index][key] = e.target.value;
-        eduArray[index]['updated'] = true;
+        eduArray[index] = education;
 
         this.setState({
             edits: {
@@ -105,64 +108,96 @@ class EditProfile extends React.Component {
         });
     }
 
-    async deleteEducation(index) {
+    deleteEducation(edu) {
         let eduArray = this.state.user.developer.education;
-        let eduId = eduArray[index];
-        try {
-            if (!eduId?.added) {
-                const response = await axiosPrivate.delete(`education/${eduId.id}/`);
-            }
+        let index = eduArray.indexOf(edu);
+        if (index > -1) {
             eduArray.splice(index, 1);
-
-            this.setState({
-                edits: {
-                    ...this.state.edits,
-                    education: true
-                },
-                user: {
-                    ...this.state.user, 
-                    developer: {
-                        ...this.state.user.developer, 
-                        education: eduArray
-                    }
-                }
-            });
-
-        } catch (error) {
-            console.log(error);
         }
+        this.setState({
+            edits: {
+                ...this.state.edits,
+                education: true
+            },
+            user: {
+                ...this.state.user, 
+                developer: {
+                    ...this.state.user.developer, 
+                    education: eduArray
+                }
+            }
+        });
     }
 
-    updateExperience(e, index, key) {
+    
+    updateExperience(experience, index) {
         let expArray = this.state.user.developer.experience;
-        expArray[index][key] = e.target.value;
+        expArray[index] = experience;
 
-        this.setState({profile: {...this.state.profile, updateExp: true},
-            user: {...this.state.user, developer: 
-                {...this.state.user.developer, experience: expArray}
-        }});
+        this.setState({
+            edits: {
+                ...this.state.edits,
+                experience: true
+            },
+            user: {
+                ...this.state.user, 
+                developer: {
+                    ...this.state.user.developer, 
+                    experience: expArray
+                }
+            }
+        });
 
     }
 
     addExperience(){
         let expArray = this.state.user.developer.experience;
-        expArray.push({company: '', title: ''});
+        expArray.push({
+            company: '', 
+            title: '',
+            location: '', 
+            start_date: '', 
+            end_date: '',
+            current: false,
+            description: '',
+            added: true,
+            developer: this.state.user.developer.id
+        });
 
-        this.setState(
-            {...this.state.user, developer: 
-                {...this.state.user.developer, experience: expArray}
+        this.setState({
+            edits: {
+                ...this.state.edits,
+                experience: true
+            },
+            user: {
+                ...this.state.user, 
+                developer: {
+                    ...this.state.user.developer, 
+                    experience: expArray
+                }
+            }
         });
     }
 
-    deleteExperience(index) {
+    deleteExperience(exp) {
         let expArray = this.state.user.developer.experience;
-        if (index > -1){
+        let index = expArray.indexOf(exp);
+        if (index > -1) {
             expArray.splice(index, 1);
         }
-        this.setState({profile: {...this.state.profile, updateExp: true},
-            user: {...this.state.user, developer: 
-                {...this.state.user.developer, experience: expArray}
-        }});
+        this.setState({
+            edits: {
+                ...this.state.edits,
+                experience: true
+            },
+            user: {
+                ...this.state.user, 
+                developer: {
+                    ...this.state.user.developer, 
+                    experience: expArray
+                }
+            }
+        });
     }
 
 
@@ -226,37 +261,11 @@ class EditProfile extends React.Component {
                             </div>
                             <br/>
                             { this.state.user.developer.education.map((edu, i) => 
-                                <div key={i}>
-                                    <div className="col-md-12">
-                                        <label className="labels">School Name</label>
-                                        <input type="text" className="form-control" 
-                                            onChange={(e) => this.updateEducation(e, i, 'school')} 
-                                            value={edu.school}/>
-                                    </div> 
-                                    <div className="col-md-12">
-                                        <label className="labels">Degree</label>
-                                        <input type="text" className="form-control" 
-                                            onChange={(e) => this.updateEducation(e, i, 'degree')} 
-                                            value={edu.degree}/>
-                                    </div> 
-                                    <div className="col-md-12">
-                                        <label className="labels">Field of Study</label>
-                                        <input type="text" className="form-control"
-                                            onChange={(e) => this.updateEducation(e, i, 'field')} 
-                                            value={edu.field}/>
-                                    </div>
-                                    <div className="col-md-12">
-                                        <label className="labels">Graduation Date</label>
-                                        <input type="date" className="form-control" 
-                                            onChange={(e) => this.updateEducation(e, i, 'end_date')} 
-                                            value={edu.end_date}/>
-                                    </div> 
-                                    <br/>
-                                    <button className='btn' onClick={() => this.deleteEducation(i)}>
-                                        <FontAwesomeIcon icon='fa-trash-arrow-up'/>
-                                    </button>
-                                    <br/>
-                                </div>
+                                <EditEducation 
+                                    key={i} 
+                                    data={edu} 
+                                    updateEducationProfile={this.updateEducation}
+                                    deleteEducationProfile={this.deleteEducation} />
                             )}
                             <div className='pt-5'>
                                 <button className='btn' onClick={() => this.addEducation()} > 
@@ -269,33 +278,17 @@ class EditProfile extends React.Component {
                                 <h4 className="text-right">Experience</h4>
                             </div>
                             <br/>
-                            <div className="col-md-12">
-                                <label className="labels">Company</label>
-                                <input type="text" className="form-control" value=""/>
-                            </div> 
-                            <br/>
-                            <div className="col-md-12">
-                                <label className="labels">Job Title</label>
-                                <input type="text" className="form-control" value=""/>
-                            </div>
-                            <div className="col-md-4">
-                                <label className="labels">Start Date</label>
-                                <input type="date" className="form-control" value=""/>
-                            </div>
-                            <div className="col-md-4">
-                                <label className="labels">End Date</label>
-                                <input type="date" className="form-control" value=""/>
-                            </div>
-                            <div className="col-md-3 m-auto form-check">
-                                <label className="form-check-label">Current?</label>
-                                <input type="checkbox" className="form-check-input" value=""/>
-                            </div>
-                            <div className="col-md-12 mt-3">
-                                <label className="labels">Description</label>
-                                <textarea type="text" className="form-control" value=""/>
-                            </div>
+                            { this.state.user.developer.experience.map((exp, i) => 
+                                <EditExperience 
+                                    key={i} 
+                                    data={exp} 
+                                    updateExperienceProfile={this.updateExperience}
+                                    deleteExperienceProfile={this.deleteExperience} />
+                            )}
                             <div className='pt-5'>
-                                <FontAwesomeIcon icon="fa-plus"/>
+                                <button className='btn' onClick={() => this.addExperience()} > 
+                                    <FontAwesomeIcon icon="fa-plus"/>
+                                </button>
                             </div>
                         </div>
                     </div>
