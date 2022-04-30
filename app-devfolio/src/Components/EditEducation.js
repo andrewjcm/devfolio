@@ -6,6 +6,7 @@ import { faTrashArrowUp } from '@fortawesome/free-solid-svg-icons';
 
 library.add(faTrashArrowUp);
 
+
 class EditEducation extends React.Component {
     constructor(props) {
         super(props);
@@ -28,10 +29,10 @@ class EditEducation extends React.Component {
     async deleteEducation(){
         try {
             if (!this.state.education?.added){
-                const response = await axiosPrivate.delete(`education/${this.state.education.id}/`);
+                await axiosPrivate.delete(`education/${this.state.education.id}/`);
             }
         
-            this.props.deleteEducationProfile(this.index);
+            this.props.deleteEducationProfile(this.props.data);
         }
         catch (error){
             console.log(error);

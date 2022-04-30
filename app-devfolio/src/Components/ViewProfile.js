@@ -13,10 +13,8 @@ class ViewProfile extends React.Component {
     }
 
     formatDate(inputDate) {
-        const months = ["Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sept", "Oct", "Nov", "Dec"];
-        const date = new Date(inputDate);
-        const formattedDate = `${months[date.getMonth() + 1]}, ${date.getFullYear()}`
-        return formattedDate;
+        const dateFormat = {month: "short", year: "numeric"};
+        return new Date(inputDate).toLocaleDateString('en-us', dateFormat);
     }
 
     render(){

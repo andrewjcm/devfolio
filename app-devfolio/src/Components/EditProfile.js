@@ -3,6 +3,7 @@ import EditEducation from './EditEducation';
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFloppyDisk, faPlus, faTrashArrowUp } from '@fortawesome/free-solid-svg-icons';
+import EditExperience from './EditExperience';
 
 
 library.add(faFloppyDisk, faPlus, faTrashArrowUp);
@@ -25,6 +26,10 @@ class EditProfile extends React.Component {
         this.updateEducation = this.updateEducation.bind(this);
         this.addEducation = this.addEducation.bind(this);
         this.deleteEducation = this.deleteEducation.bind(this);
+        
+        this.updateExperience = this.updateExperience.bind(this);
+        this.addExperience = this.addExperience.bind(this);
+        this.deleteExperience = this.deleteExperience.bind(this);
     }
 
     onSubmitUpdateProfile() {
@@ -103,9 +108,12 @@ class EditProfile extends React.Component {
         });
     }
 
-    deleteEducation(index) {
+    deleteEducation(edu) {
         let eduArray = this.state.user.developer.education;
-        eduArray.splice(index, 1);
+        let index = eduArray.indexOf(edu);
+        if (index > -1) {
+            eduArray.splice(index, 1);
+        }
         this.setState({
             edits: {
                 ...this.state.edits,
@@ -121,36 +129,75 @@ class EditProfile extends React.Component {
         });
     }
 
-    updateExperience(e, index, key) {
+    
+    updateExperience(experience, index) {
         let expArray = this.state.user.developer.experience;
-        expArray[index][key] = e.target.value;
+        expArray[index] = experience;
 
-        this.setState({profile: {...this.state.profile, updateExp: true},
-            user: {...this.state.user, developer: 
-                {...this.state.user.developer, experience: expArray}
-        }});
+        this.setState({
+            edits: {
+                ...this.state.edits,
+                experience: true
+            },
+            user: {
+                ...this.state.user, 
+                developer: {
+                    ...this.state.user.developer, 
+                    experience: expArray
+                }
+            }
+        });
 
     }
 
     addExperience(){
         let expArray = this.state.user.developer.experience;
-        expArray.push({company: '', title: ''});
+        expArray.push({
+            company: '', 
+            title: '',
+            location: '', 
+            start_date: '', 
+            end_date: '',
+            current: false,
+            description: '',
+            added: true,
+            developer: this.state.user.developer.id
+        });
 
-        this.setState(
-            {...this.state.user, developer: 
-                {...this.state.user.developer, experience: expArray}
+        this.setState({
+            edits: {
+                ...this.state.edits,
+                experience: true
+            },
+            user: {
+                ...this.state.user, 
+                developer: {
+                    ...this.state.user.developer, 
+                    experience: expArray
+                }
+            }
         });
     }
 
-    deleteExperience(index) {
+    deleteExperience(exp) {
         let expArray = this.state.user.developer.experience;
-        if (index > -1){
+        let index = expArray.indexOf(exp);
+        if (index > -1) {
             expArray.splice(index, 1);
         }
-        this.setState({profile: {...this.state.profile, updateExp: true},
-            user: {...this.state.user, developer: 
-                {...this.state.user.developer, experience: expArray}
-        }});
+        this.setState({
+            edits: {
+                ...this.state.edits,
+                experience: true
+            },
+            user: {
+                ...this.state.user, 
+                developer: {
+                    ...this.state.user.developer, 
+                    experience: expArray
+                }
+            }
+        });
     }
 
 
@@ -231,33 +278,17 @@ class EditProfile extends React.Component {
                                 <h4 className="text-right">Experience</h4>
                             </div>
                             <br/>
-                            <div className="col-md-12">
-                                <label className="labels">Company</label>
-                                <input type="text" className="form-control" value=""/>
-                            </div> 
-                            <br/>
-                            <div className="col-md-12">
-                                <label className="labels">Job Title</label>
-                                <input type="text" className="form-control" value=""/>
-                            </div>
-                            <div className="col-md-4">
-                                <label className="labels">Start Date</label>
-                                <input type="date" className="form-control" value=""/>
-                            </div>
-                            <div className="col-md-4">
-                                <label className="labels">End Date</label>
-                                <input type="date" className="form-control" value=""/>
-                            </div>
-                            <div className="col-md-3 m-auto form-check">
-                                <label className="form-check-label">Current?</label>
-                                <input type="checkbox" className="form-check-input" value=""/>
-                            </div>
-                            <div className="col-md-12 mt-3">
-                                <label className="labels">Description</label>
-                                <textarea type="text" className="form-control" value=""/>
-                            </div>
+                            { this.state.user.developer.experience.map((exp, i) => 
+                                <EditExperience 
+                                    key={i} 
+                                    data={exp} 
+                                    updateExperienceProfile={this.updateExperience}
+                                    deleteExperienceProfile={this.deleteExperience} />
+                            )}
                             <div className='pt-5'>
-                                <FontAwesomeIcon icon="fa-plus"/>
+                                <button className='btn' onClick={() => this.addExperience()} > 
+                                    <FontAwesomeIcon icon="fa-plus"/>
+                                </button>
                             </div>
                         </div>
                     </div>
