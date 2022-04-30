@@ -86,7 +86,8 @@ class EditProfile extends React.Component {
             degree: '', 
             field: '', 
             end_date: '',
-            added: true
+            added: true,
+            developer: this.state.user.developer.id
         });
 
         this.setState({
@@ -106,10 +107,27 @@ class EditProfile extends React.Component {
 
     async deleteEducation(index) {
         let eduArray = this.state.user.developer.education;
-        let eduId = eduArray[index].id;
+        let eduId = eduArray[index];
         try {
-            const response = await axiosPrivate.delete(`education/${eduId}/`);
+            if (!eduId?.added) {
+                const response = await axiosPrivate.delete(`education/${eduId.id}/`);
+            }
             eduArray.splice(index, 1);
+
+            this.setState({
+                edits: {
+                    ...this.state.edits,
+                    education: true
+                },
+                user: {
+                    ...this.state.user, 
+                    developer: {
+                        ...this.state.user.developer, 
+                        education: eduArray
+                    }
+                }
+            });
+
         } catch (error) {
             console.log(error);
         }
@@ -208,7 +226,7 @@ class EditProfile extends React.Component {
                             </div>
                             <br/>
                             { this.state.user.developer.education.map((edu, i) => 
-                                <div>
+                                <div key={i}>
                                     <div className="col-md-12">
                                         <label className="labels">School Name</label>
                                         <input type="text" className="form-control" 
@@ -252,13 +270,29 @@ class EditProfile extends React.Component {
                             </div>
                             <br/>
                             <div className="col-md-12">
-                                <label className="labels">Experience in Designing</label>
-                                <input type="text" className="form-control" placeholder="experience" value=""/>
+                                <label className="labels">Company</label>
+                                <input type="text" className="form-control" value=""/>
                             </div> 
                             <br/>
                             <div className="col-md-12">
-                                <label className="labels">Additional Details</label>
-                                <input type="text" className="form-control" placeholder="additional details" value=""/>
+                                <label className="labels">Job Title</label>
+                                <input type="text" className="form-control" value=""/>
+                            </div>
+                            <div className="col-md-4">
+                                <label className="labels">Start Date</label>
+                                <input type="date" className="form-control" value=""/>
+                            </div>
+                            <div className="col-md-4">
+                                <label className="labels">End Date</label>
+                                <input type="date" className="form-control" value=""/>
+                            </div>
+                            <div className="col-md-3 m-auto form-check">
+                                <label className="form-check-label">Current?</label>
+                                <input type="checkbox" className="form-check-input" value=""/>
+                            </div>
+                            <div className="col-md-12 mt-3">
+                                <label className="labels">Description</label>
+                                <textarea type="text" className="form-control" value=""/>
                             </div>
                             <div className='pt-5'>
                                 <FontAwesomeIcon icon="fa-plus"/>

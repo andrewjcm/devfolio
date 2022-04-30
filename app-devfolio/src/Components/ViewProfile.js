@@ -58,7 +58,7 @@ class ViewProfile extends React.Component {
                                         </div>
                                         <br/>
                                         { this.props.user.developer.education.map(edu =>
-                                            <div className='text-start ms-3'>
+                                            <div className='text-start ms-3 mb-3' key={edu.id}>
                                                 <div className="col-md-12">
                                                     <span className="fw-bold">{edu.school}</span>
                                                 </div> 

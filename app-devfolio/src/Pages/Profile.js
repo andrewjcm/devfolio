@@ -49,13 +49,10 @@ class Profile extends React.Component {
                 this.addDeveloper(data.developer);
             }
         }
-        
-        if (changes.developer.added) {
-            this.addDeveloper(changes.user.developer.addedData);
-        }
+
 
         if (changes.education) {
-            for (let edu of data.user.developer.education) {
+            for (let edu of data.developer.education) {
                 if (edu?.added){
                     delete edu.added;
                     delete edu.updated;
