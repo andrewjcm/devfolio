@@ -36,6 +36,7 @@ class Profile extends React.Component {
 
     submitUpdateProfile(data, changes) {
         this.editProfile();
+        this.setState({user: {}});
 
         if (changes.user){
             this.updateUser(data);
@@ -65,26 +66,21 @@ class Profile extends React.Component {
             }
         }
 
-        if (changes.experience.updated) {
-            for (let exp of changes.experience.updatedData) {
-                this.updateExperince(exp);
-            }
-        }
-        
-        if (changes.experience.added) {
-            for (let exp of changes.experience.addedData) {
-                this.addExperince(exp);
-            }
-        }
-
-        if (changes.experience.deleted) {
-            for (let exp of changes.experience.deletedId) {
-                this.deleteExperince(exp);
+        if (changes.experience) {
+            for (let exp of data.developer.experience) {
+                if (exp?.added){
+                    delete exp.added;
+                    delete exp.updated;
+                    this.addExperince(exp);
+                }
+                else if (exp?.updated){
+                    delete exp.updated;
+                    this.updateExperince(exp);
+                }
             }
         }
 
-        
-        this.setState({user: data});
+        this.getUserDetail();
     }
 
     editProfile(){
