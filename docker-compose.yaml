@@ -1,0 +1,28 @@
+version: "3"
+services:
+  devfolio-api:
+    restart: always
+    container_name: devfolio-api
+    command : bash -c "python manage.py migrate &&
+                      python manage.py runserver 0.0.0.0:8000"
+    build:
+      context: ./devfolio_api/
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./devfolio_api:/api
+
+  app-devfolio:
+    command : npm start
+    container_name: app-devfolio
+    build:
+      context: ./app-devfolio/
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    stdin_open: true
+    depends_on:
+      - project
+    volumes:
+      - ./app-devfolio:/frontend

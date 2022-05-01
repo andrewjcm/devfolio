@@ -1,16 +1,18 @@
 import React from 'react';
 import { axiosPrivate } from '../Services/Api';
-import { library } from "@fortawesome/fontawesome-svg-core";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPenToSquare, faFloppyDisk, faPlus } from '@fortawesome/free-solid-svg-icons';
+import ViewProfile from '../Components/ViewProfile';
+import EditProfile from '../Components/EditProfile';
 
-library.add(faPenToSquare, faFloppyDisk, faPlus);
 
 
 class Profile extends React.Component {
     constructor(props){
         super(props);
-        this.state = {loading: true, editing: false, user: {}}
+        this.state = {
+            loading: true, 
+            editing: false,
+            user: {}
+        }
         this.userId = props.auth.userId
         this.submitUpdateProfile = this.submitUpdateProfile.bind(this);
         this.editProfile = this.editProfile.bind(this);
@@ -32,13 +34,129 @@ class Profile extends React.Component {
         }
     }
 
-    submitUpdateProfile() {
-        console.log(`New username: ${this.state.user.username}`);
+    submitUpdateProfile(data, changes) {
         this.editProfile();
+        this.setState({user: {}});
+
+        if (changes.user){
+            this.updateUser(data);
+        }
+
+        if (changes.developer) {
+            if (this.state.user?.developer) {
+                this.updateDeveloper(data.developer);
+            }
+            else {
+                this.addDeveloper(data.developer);
+            }
+        }
+
+
+        if (changes.education) {
+            for (let edu of data.developer.education) {
+                if (edu?.added){
+                    delete edu.added;
+                    delete edu.updated;
+                    this.addEducation(edu);
+                }
+                else if (edu?.updated){
+                    delete edu.updated;
+                    this.updateEducation(edu);
+                }
+            }
+        }
+
+        if (changes.experience) {
+            for (let exp of data.developer.experience) {
+                if (exp?.added){
+                    delete exp.added;
+                    delete exp.updated;
+                    this.addExperince(exp);
+                }
+                else if (exp?.updated){
+                    delete exp.updated;
+                    this.updateExperince(exp);
+                }
+            }
+        }
+
+        this.getUserDetail();
     }
 
     editProfile(){
         this.setState({ editing: !this.state.editing });
+    }
+
+    async updateUser(user) {
+        try {
+            await axiosPrivate.put(`users/${this.userId}/`, user);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    async addDeveloper(developer) {
+        try {
+            await axiosPrivate.post(`developers/`, developer);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    async updateDeveloper(developer) {
+        try {
+            await axiosPrivate.put(`developers/${developer.id}/`, developer);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    async updateEducation(education) {
+        try {
+            await axiosPrivate.put(`education/${education.id}/`, education);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    async addEducation(education) {
+        try {
+            await axiosPrivate.post(`education/`, education);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    async deleteEducation(id) {
+        try {
+            await axiosPrivate.delete(`education/${id}/`);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    async updateExperince(experience) {
+        try {
+            await axiosPrivate.put(`experience/${experience.id}/`, experience);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    async addExperince(experience) {
+        try {
+            await axiosPrivate.post(`experience/`, experience);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    async deleteExperince(id) {
+        try {
+            await axiosPrivate.delete(`experience/${id}/`);
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     render() {
@@ -49,77 +167,10 @@ class Profile extends React.Component {
 
         return (
             <div className="container rounded bg-white mt-5 mb-5">
-                <div className="row">
-                    <div className="col-md-3 border-right">
-                        <div className="d-flex flex-column align-items-center text-center p-3 py-5">
-                            <img className="rounded-circle mt-5" width="150px" src="https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg"/>
-                            { this.state.editing 
-                                ? <span><label className="labels">Username</label> <input type="text" className="form-control" onChange={(e) => this.setState({user: {...this.state.user, username: e.target.value}})} value={this.state.user.username}/></span>
-                                : <span className="font-weight-bold">{this.state.user.username}</span>
-                            }
-
-                            { this.state.editing 
-                                ? <span><label className="labels">Email</label> <input type="text" className="form-control" value={this.state.user.email}/></span>
-                                : <span className="font-weight-bold">{this.state.user.email}</span>
-                            }  
-                            
-                            <span> </span>
-                        </div>
-                    </div>
-                    <div className="col-md-5 border-right">
-                        <div className="p-3 py-5">
-                            <div className="d-flex justify-content-between align-items-center mb-3">
-                                <h4 className="text-right">Profile</h4>
-                                { this.state.editing 
-                                    ? <a onClick={this.submitUpdateProfile}> <FontAwesomeIcon icon="fa-floppy-disk"/></a>
-                                    : <a onClick={this.editProfile}> <FontAwesomeIcon icon="fa-pen-to-square" /> </a> 
-                                }   
-                            </div>
-                            <div className="row mt-3">
-                                <div className="col-md-12">
-                                    
-                                    { this.state.editing 
-                                        ? <div><label className="labels">Full Name</label> <input type="text" className="form-control" onChange={(e) => this.setState({user: {...this.state.user, name: e.target.value}})} value={this.state.user.name}/></div>
-                                        : <span className="font-weight-bold">{this.state.user.name ? this.state.user.name : "Name not set"}</span>
-                                    }
-                                </div>
-                                <div className="col-md-6">
-                                    { this.state.editing 
-                                        ? <div><label className="labels">City</label> <input type="text" className="form-control" onChange={(e) => this.setState({user: {...this.state.user, city: e.target.value}})} value={this.state.user.city}/></div>
-                                        : <span className="font-weight-bold">{this.state.user.city ? this.state.user.city : "City not set"}</span>
-                                    }
-                                </div>
-                                <div className="col-md-6">
-                                    { this.state.editing 
-                                        ? <div><label className="labels">State</label> <input type="text" className="form-control" onChange={(e) => this.setState({user: {...this.state.user, state: e.target.value}})} value={this.state.user.state}/></div>
-                                        : <span className="font-weight-bold">{this.state.user.state ? this.state.user.state : "State not set"}</span>
-                                    }
-                                </div>
-                                
-                                <div className="col-md-12">
-                                    <label className="labels">Education</label>
-                                    <input type="text" className="form-control" placeholder="education" value=""/>
-                                </div>
-                                <div className="d-flex justify-content-between align-items-center experience mt-5">
-                                    <h4 className="text-right">Experience</h4>
-                                </div>
-                                <br/>
-                                <div className="col-md-12">
-                                    <label className="labels">Experience in Designing</label>
-                                    <input type="text" className="form-control" placeholder="experience" value=""/>
-                                </div> 
-                                <br/>
-                                <div className="col-md-12">
-                                    <label className="labels">Additional Details</label>
-                                    <input type="text" className="form-control" placeholder="additional details" value=""/>
-                                </div>
-                                <div className='pt-5'>
-                                    <FontAwesomeIcon icon="fa-plus"/>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                { this.state.editing 
+                    ? <EditProfile user={this.state.user} profileEdits={this.submitUpdateProfile}/>
+                    : <ViewProfile user={this.state.user} activateEdit={this.editProfile}/>
+                }
             </div>
         );
     }
