@@ -59,35 +59,40 @@ const Login = (props) => {
     return (
         <main className='container-sm' >
             <p className={errorMessage ? "alert alert-danger" : "hidden"}>{errorMessage}</p>
-            <div className='d-flex justify-content-center'>
-                <div className="shadow p-3 m-5 w-50 rounded-3">
-                    <form onSubmit={onLoginSubmit}>
-                        <div className='mb-3'>
-                            <label htmlFor='username' className='form-label'> Username </label>
-                            <input
-                                className='form-control' 
-                                type="text" 
-                                id="username" 
-                                onChange={(e) => setUsername(e.target.value)} 
-                                value={username}
-                                required
-                            />
-                        </div>
-                        <div className='mb-3'>
-                            <label htmlFor='password' className='form-label'> Password </label>
-                            <input 
-                                className='form-control'
-                                type="password" 
-                                id="password" 
-                                onChange={(e) => setPassword(e.target.value)}
-                                value={password}
-                                required
-                            />
-                        </div>
-                        <div>
-                            <button type='submit' className='btn btn-primary'>Login</button>
-                        </div>
-                    </form>
+            <div className='d-flex flex-column align-items-center justify-content-center'>
+                <div className='shadow border rounded-3 mt-5'>
+                    <div className='text-center bg-light bg-opacity-50 p-4 border-bottom'>
+                        <h3 className='ps-5 pe-5'>Developer Login</h3>
+                    </div>
+                    <div className="bg-light p-3 rounded-3">
+                        <form onSubmit={onLoginSubmit}>
+                            <div className='mb-3'>
+                                <label htmlFor='username' className='form-label'> Username </label>
+                                <input
+                                    className='form-control' 
+                                    type="text" 
+                                    id="username" 
+                                    onChange={(e) => setUsername(e.target.value)} 
+                                    value={username}
+                                    required
+                                />
+                            </div>
+                            <div className='mb-3'>
+                                <label htmlFor='password' className='form-label'> Password </label>
+                                <input 
+                                    className='form-control'
+                                    type="password" 
+                                    id="password" 
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    value={password}
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <button type='submit' className='btn btn-primary'>Login</button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
         </main>
