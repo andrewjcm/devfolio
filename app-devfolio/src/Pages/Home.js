@@ -1,4 +1,4 @@
-import React, { useReducer } from "react";
+import React from "react";
 import Typewriter from 'typewriter-effect';
 import andrew from '../static/images/andrew_in_prague.jpg';
 
@@ -20,7 +20,7 @@ class Home extends React.Component {
                     </h1>
                         <h3 className=" fst-regular d-flex flex-row">
                             <span className="me-2">I'm a</span>
-                            <span className="border-bottom border-dark border-3 w-50">
+                            <span className="border-bottom border-dark border-3" style={{width: "65%"}}>
                                 <Typewriter
                                     onInit={(typewriter) => {
                                         typewriter.typeString(this.psStr)
@@ -33,15 +33,19 @@ class Home extends React.Component {
                                         .start();  
                                     }}
                                     />
-                                </span>
-                            </h3>
+                            </span>
+                        </h3>
                     <img className=" img-thumbnail rounded-circle mx-auto d-block w-75 m-5" src={andrew} alt='Andrew'/>
                 </div>
-                <div className="section">
+                <div className="section mb-5">
                     <div>
                         {
                             !this.state.applied
-                                ? <button className="btn btn-primary" onClick={() => this.setState({applied: true})}>View Resume</button>
+                                ?   <button 
+                                        className="btn btn-primary" 
+                                        onClick={() => this.setState({applied: true})}>
+                                        View Resume
+                                    </button>
                                 : <div></div>
                         }
                         {
