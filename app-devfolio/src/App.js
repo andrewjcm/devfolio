@@ -36,7 +36,7 @@ class App extends React.Component {
         <Routes>
           <Route path="/" element={<Layout/>}>
             <Route path="/" element={<Home/>}/>
-            <Route path="/login" element={<Login authChange={this.onAuthChange}/>}/>
+            <Route path="/dev-admin" element={<Login authChange={this.onAuthChange}/>}/>
             <Route element={<RequireAuth/>}>
               <Route path="/profile" element={<Profile auth={this.state.auth}/>}/>
               <Route path="/dashboard" element={<Dashboard auth={this.state.auth}/>}/>
