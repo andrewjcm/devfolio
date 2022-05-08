@@ -4,21 +4,34 @@ import { Routes, Route } from 'react-router-dom';
 import Home from './Pages/Home';
 import Dashboard from './Pages/Dashboard'
 import Login from './Pages/Login';
+import Logout from './Pages/Logout';
 import Missing from './Pages/Missing';
 import Layout from './Components/Layout';
 import RequireAuth from './Components/RequireAuth';
 import Profile from './Pages/Profile';
 import NavBar from './Components/NavBar';
+import { axiosPrivate } from './Services/Api';
 
 class App extends React.Component {
   constructor(props) {
     super(props)
-    this.state = {isAuthenticated: false, auth: {}};
+    this.state = {isAuthenticated: false, auth: {}, isAdmin: false};
     this.onAuthChange = this.onAuthChange.bind(this);
+    this.logout = this.logout.bind(this);
   }
 
-  onAuthChange(authData) {
+  async onAuthChange(authData) {
     this.setState({auth: authData, isAuthenticated: true});
+
+    try {
+      const response = await axiosPrivate.get(`users/${authData.userId}`);
+      if (response.data?.is_superuser) {
+        this.setState({isAdmin: true});
+      }
+    } 
+    catch (error) {
+      console.log(error);
+    }
   }
 
   logout() {
@@ -30,7 +43,7 @@ class App extends React.Component {
       <div className='container-fluid'>
         {
           this.state.isAuthenticated
-            ? <NavBar/>
+            ? <NavBar onLogout={this.logout} isAdmin={this.state.isAdmin}/>
             : <div></div>
         }
         <Routes>
@@ -42,6 +55,7 @@ class App extends React.Component {
               <Route path="/dashboard" element={<Dashboard auth={this.state.auth}/>}/>
               <Route path="/edit" element={<h1>Edit</h1>}/>
             </Route>
+            <Route path='/logout' element={<Logout/>}/>
             <Route path="*" element={<Missing/>}/>
           </Route>
         </Routes>
