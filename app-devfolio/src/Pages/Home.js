@@ -7,33 +7,38 @@ class Home extends React.Component {
         super(props);
         this.state = {applied: false};
         this.engStr = 'Software Engineer.';
-        this.psStr = 'problem solver.';
-        this.colStr = "collaborator."
+        this.psStr = 'Problem Solver.';
+        this.colStr = "Collaborator."
     }
     render()
     {
         return (
-            <div className="container-fluid">
+            <div className="container-fluid d-flex flex-column justify-content-center align-items-center">
                 <div className="section">
-                    <h1 className="text-center mt-5">
+                    <h1 className="mt-5">
                         Hello, my name is Andrew.
-                        <Typewriter
-                            onInit={(typewriter) => {
-                                typewriter.typeString("I'm a " + this.psStr)
-                                .pauseFor(500)
-                                .deleteChars(this.psStr.length)
-                                .typeString(this.colStr)
-                                .pauseFor(500)
-                                .deleteChars(this.colStr.length)
-                                .typeString(this.engStr)
-                                .start();  
-                            }}
-                            />
                     </h1>
-                    <img className=" img-thumbnail rounded-circle mx-auto d-block w-25 m-5" src={andrew} alt='Andrew'/>
+                        <h3 className=" fst-regular d-flex flex-row">
+                            <span className="me-2">I'm a</span>
+                            <span className="border-bottom border-dark border-3 w-50">
+                                <Typewriter
+                                    onInit={(typewriter) => {
+                                        typewriter.typeString(this.psStr)
+                                        .pauseFor(500)
+                                        .deleteChars(this.psStr.length)
+                                        .typeString(this.colStr)
+                                        .pauseFor(500)
+                                        .deleteChars(this.colStr.length)
+                                        .typeString(this.engStr)
+                                        .start();  
+                                    }}
+                                    />
+                                </span>
+                            </h3>
+                    <img className=" img-thumbnail rounded-circle mx-auto d-block w-75 m-5" src={andrew} alt='Andrew'/>
                 </div>
-                <div className="section d-flex justify-content-center">
-                    <div className=" d-inline">
+                <div className="section">
+                    <div>
                         {
                             !this.state.applied
                                 ? <button className="btn btn-primary" onClick={() => this.setState({applied: true})}>View Resume</button>
@@ -42,6 +47,7 @@ class Home extends React.Component {
                         {
                             this.state.applied 
                                 ?   <form>
+                                        <p>View Resume</p>
                                         <div className="form-floating mb-3">
                                             <input type='text' className="form-control" id="jobId" aria-describedby="jobId" placeholder="job-id-123"/>
                                             <label for="jobId" className=" form-label">Job Id</label>
