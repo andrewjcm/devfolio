@@ -57,11 +57,9 @@ const Login = (props) => {
 
 
     return (
-        <main className='container-sm' >
+        <main className='container-sm d-flex justify-content-center' >
             <p className={errorMessage ? "alert alert-danger" : "hidden"}>{errorMessage}</p>
-            <h1>Sign In</h1>
-            <div className="shadow p-3 mb-5 bg-body rounded">
-
+            <div className="shadow p-3 m-5 w-50 rounded">
                 <form onSubmit={onLoginSubmit}>
                     <div className='mb-3'>
                         <label htmlFor='username' className='form-label'> Username </label>
@@ -86,7 +84,7 @@ const Login = (props) => {
                         />
                     </div>
                     <div>
-                        <button type='submit' className='btn btn-primary'>Sign In</button>
+                        <button type='submit' className='btn btn-primary'>Login</button>
                     </div>
                 </form>
             </div>
