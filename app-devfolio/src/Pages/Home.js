@@ -20,7 +20,7 @@ class Home extends React.Component {
                     </h1>
                         <h3 className=" fst-regular d-flex flex-row">
                             <span className="me-2">I'm a</span>
-                            <span className="border-bottom border-dark border-3" style={{width: "65%"}}>
+                            <span className="border-bottom border-dark border-3" style={{minWidth: "45%"}}>
                                 <Typewriter
                                     onInit={(typewriter) => {
                                         typewriter.typeString(this.psStr)
