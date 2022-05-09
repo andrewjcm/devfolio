@@ -33,8 +33,8 @@ const Login = (props) => {
             const accessToken = response?.data?.access;
             const refreshToken = response?.data?.refresh;
             const userId = jwt_decode(accessToken).user_id;
-            const auth = {username, password, accessToken, refreshToken, userId};
-            props.authChange({username, password, accessToken, refreshToken, userId});
+            const auth = {username, accessToken, refreshToken, userId};
+            props.authChange({username, accessToken, refreshToken, userId});
             setAuth(auth);
             setUsername('');
             setPassword('');

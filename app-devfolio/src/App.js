@@ -20,11 +20,23 @@ class App extends React.Component {
     this.logout = this.logout.bind(this);
   }
 
-  async onAuthChange(authData) {
+  componentDidMount(){
+    let authData = JSON.parse(localStorage.getItem("auth"));
+    if (authData) {
+      this.setState({auth: authData, isAuthenticated: true});
+      this.setSuperuserStatus(authData.userId);
+    }
+  }
+  
+  onAuthChange(authData) {
     this.setState({auth: authData, isAuthenticated: true});
+    localStorage.setItem("auth", JSON.stringify(authData));
+    this.setSuperuserStatus(authData.userId);
+  }
 
+  async setSuperuserStatus(userId){
     try {
-      const response = await axiosPrivate.get(`users/${authData.userId}`);
+      const response = await axiosPrivate.get(`users/${userId}`);
       if (response.data?.is_superuser) {
         this.setState({isAdmin: true});
       }
@@ -35,7 +47,8 @@ class App extends React.Component {
   }
 
   logout() {
-    this.setState({isAuthenticated: false, auth: {}});
+    this.setState({isAuthenticated: false, auth: {}, isAdmin: false});
+    localStorage.removeItem('auth');
   }
 
   render() {
